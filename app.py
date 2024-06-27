@@ -122,7 +122,7 @@ recall_svm = TP_svm / (TP_svm + FN_svm)
 precision_svm = TN_svm / (TN_svm + FP_svm)
 
 # Predictions and evaluations for KMeans SVM
-y_pred_cluster_svm = kmeans.predict(X_test_svm)
+y_pred_cluster_svm = kmeans.predict(X_test_ksvm)
 y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
 
