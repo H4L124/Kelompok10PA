@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler
 
 # Initialize dummy scaler and model
 svm_scaler = StandardScaler()
-svm_model = SVC()
+svm_model = SVC(probability=True)  # Ensure probability=True to get decision function
 
 # Example scaled data for initialization
 svm_scaler.fit([[0, 0, 0], [30000, 86400*365, 365]])
@@ -24,7 +24,8 @@ def convert_days_to_seconds(days):
 
 def convert_seconds_to_days(seconds):
     return seconds / 86400
-    # Callback function when days input changes
+
+# Callback function when days input changes
 def update_days():
     st.session_state.second = convert_days_to_seconds(st.session_state.days)
 
@@ -59,7 +60,7 @@ y_test_svm = test_data['fraud']
 
 cluster = test_data['cluster'] 
 X_test_ksvm_prep = kmeans_scaler.transform(test_data[['amount', 'second', 'days']])
-X_test_ksvm_prep =pd.DataFrame(X_test_ksvm_prep, columns=['amount', 'second', 'days']) 
+X_test_ksvm_prep = pd.DataFrame(X_test_ksvm_prep, columns=['amount', 'second', 'days']) 
 X_test_ksvm = pd.concat([cluster, X_test_ksvm_prep], axis=1)
 y_test_ksvm = test_data['fraud']
 
@@ -119,11 +120,11 @@ TN_svm = cm_svm[0, 0]
 
 accuracy_svm = (TP_svm + TN_svm) / (TP_svm + TN_svm + FP_svm + FN_svm)
 recall_svm = TP_svm / (TP_svm + FN_svm)
-precision_svm = TN_svm / (TN_svm + FP_svm)
+precision_svm = TP_svm / (TP_svm + FP_svm)
 
 # Predictions and evaluations for KMeans SVM
 y_pred_cluster_svm = kmeans.predict(X_test_ksvm)
-y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
+y_pred_cluster_svm_proba = kmeans.predict_proba(X_test_ksvm)[:, 1]
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
 
 # Calculate accuracy, sensitivity, and specificity manually for KMeans SVM
@@ -134,7 +135,7 @@ TN_cluster_svm = cm_cluster_svm[0, 0]
 
 accuracy_cluster_svm = (TP_cluster_svm + TN_cluster_svm) / (TP_cluster_svm + TN_cluster_svm + FP_cluster_svm + FN_cluster_svm)
 recall_cluster_svm = TP_cluster_svm / (TP_cluster_svm + FN_cluster_svm)
-precision_cluster_svm = TN_cluster_svm / (TN_cluster_svm + FP_cluster_svm)
+precision_cluster_svm = TP_cluster_svm / (TP_cluster_svm + FP_cluster_svm)
 
 # Calculate ROC curve and AUC
 fpr_svm, tpr_svm, _ = roc_curve(y_test_svm, y_pred_svm_proba)
@@ -202,16 +203,17 @@ elif page == "Perbandingan Model":
     ax3.legend(loc="lower right")
     st.pyplot(fig3)
 
+# New Predictions Page
 if page == "Prediksi Baru":
     st.title("Prediksi Menggunakan Model SVM")
 
     # Input fields for amount, days, and seconds
     amount = st.number_input("Amount", min_value=0.0, max_value=30000.0)
     
-    # Input field for days (remove value=st.session_state.days)
+    # Input field for days
     days = st.number_input("Days", min_value=0.0, step=1.0, key='days', on_change=update_days)
 
-    # Input field for seconds (remove value=st.session_state.second)
+    # Input field for seconds
     second = st.number_input("Second", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
 
     if st.button("Prediksi"):
