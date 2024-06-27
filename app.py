@@ -54,10 +54,10 @@ kmeans_scaler = load('kmeans_scaler.joblib')
 kmeans = load('kmeans_model.joblib')
 
 # Standardize the test data
-cluster = test_data['cluster'] 
 X_test_svm = svm_scaler.transform(test_data[['amount', 'second', 'days']])
 y_test_svm = test_data['fraud']
 
+cluster = test_data['cluster'] 
 X_test_ksvm_prep = kmeans_scaler.transform(test_data[['amount', 'second', 'days']])
 X_test_ksvm_prep =pd.DataFrame(X_test_ksvm_prep, columns=['amount', 'second', 'days']) 
 X_test_ksvm = pd.concat([cluster, X_test_ksvm_prep], axis=1)
@@ -122,9 +122,8 @@ recall_svm = TP_svm / (TP_svm + FN_svm)
 precision_svm = TN_svm / (TN_svm + FP_svm)
 
 # Predictions and evaluations for KMeans SVM
-y_pred_cluster_svm = cluster_svm_model.predict(X_test_ksvm)
-y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
 y_pred_cluster_svm = kmeans.predict(X_test_svm)
+y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
 
 # Calculate accuracy, sensitivity, and specificity manually for KMeans SVM
