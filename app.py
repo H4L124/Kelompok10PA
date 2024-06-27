@@ -58,10 +58,11 @@ kmeans = load('kmeans_model.joblib')
 X_test_svm = svm_scaler.transform(test_data[['amount', 'second', 'days']])
 y_test_svm = test_data['fraud']
 
-cluster = test_data['cluster'] 
+
 X_test_ksvm_prep = kmeans_scaler.transform(test_data[['amount', 'second', 'days']])
 X_test_ksvm_prep = pd.DataFrame(X_test_ksvm_prep, columns=['amount', 'second', 'days']) 
-X_test_ksvm = pd.concat([cluster, X_test_ksvm_prep], axis=1)
+cluster_test = test_data['cluster'] 
+X_test_ksvm = pd.concat([cluster_test, X_test_ksvm_prep], axis=1)
 y_test_ksvm = test_data['fraud']
 
 # Sidebar for navigation
