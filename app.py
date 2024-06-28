@@ -42,27 +42,25 @@ def load_data(file_path):
     data = pd.read_excel(file_path, sheet_name='data')
     train_data = pd.read_excel(file_path, sheet_name='oversample.train')
     test_data = pd.read_excel(file_path, sheet_name='test')
-    return data, train_data, test_data
+    train_ksvm =  pd.read_excel(file_path, sheet_name='train_ksvm')
+    test_ksvm =  pd.read_excel(file_path, sheet_name='test_ksvm')
+    return data, train_data, test_data, train_ksvm, test_ksvm
 
 # Load data initially
-data, train_data, test_data = load_data('data.xlsx')
+data, train_data, test_data, train_ksvm, test_ksvm = load_data('data.xlsx')
 
 # Load the pre-trained models
 svm_scaler = load('svm_scaler.joblib')
 svm_model = load('svm_model.joblib')
 
-kmeans_scaler = load('kmeans_scaler.joblib')
-kmeans = load('kmeans_model.joblib')
+kmeans = load('ksvm_model.joblib')
 
 # Standardize the test data
 X_test_svm = svm_scaler.transform(test_data[['amount', 'second', 'days']])
 y_test_svm = test_data['fraud']
 
 
-X_test_ksvm_prep = kmeans_scaler.transform(test_data[['amount', 'second', 'days']])
-X_test_ksvm_prep = pd.DataFrame(X_test_ksvm_prep, columns=['amount', 'second', 'days']) 
-cluster_test = test_data['cluster'] 
-X_test_ksvm = pd.concat([cluster_test, X_test_ksvm_prep], axis=1)
+X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster]]
 y_test_ksvm = test_data['fraud']
 
 # Sidebar for navigation
@@ -125,7 +123,7 @@ precision_svm = TP_svm / (TP_svm + FP_svm)
 
 # Predictions and evaluations for KMeans SVM
 y_pred_cluster_svm = kmeans.predict(X_test_ksvm)
-y_pred_cluster_svm_proba = kmeans.predict_proba(X_test_ksvm)[:, 1]
+y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
 
 # Calculate accuracy, sensitivity, and specificity manually for KMeans SVM
