@@ -236,7 +236,7 @@ elif page == "Hybrid Classifier: KMeans SVM":
 
 # Model Comparison Page
 elif page == "Pemilihan Metode Terbaik":
-    st.title("Perbandingan Model SVM dan KMeans SVM")
+    st.title("Perbandingan Metode SVM dan KMeans SVM")
     # Membuat dataframe untuk SVM
     svm_metrics = {
     "Model": ["SVM"],
