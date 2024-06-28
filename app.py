@@ -63,6 +63,7 @@ y_test_ksvm = test_ksvm['fraud']
 
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
+st.sidebar.subheader("Dashboard Prediksi Penipuan Transaksi Kartu Kredit")
 st.sidebar.subheader("Disusun Oleh:")
 st.sidebar.write("Kelompok 10 Kelas B")
 st.sidebar.subheader("Anggota Kelompok:")
