@@ -76,7 +76,6 @@ if page == "Karakteristik Data":
 
  # Descriptive statistics for each variable
     def descriptive_stats(variable):
-    # Set format angka desimal
         pd.options.display.float_format = '{:.2f}'.format
         stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
         # Mapping nama variabel
@@ -94,9 +93,6 @@ if page == "Karakteristik Data":
         'median': 'Median',
         'max': 'Nilai Maksimum'
         })
-    
-    # Reset format angka desimal ke default setelah selesai
-        pd.options.display.float_format = None
         return stats
 
     amount_stats = descriptive_stats('amount')
@@ -229,13 +225,7 @@ elif page == "Pemilihan Model Terbaik":
     st.write(f"Sensitivitas: {recall_cluster_svm:.5f}")
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
     
-    # Compare accuracy and display message based on comparison
-    if accuracy_svm > accuracy_cluster_svm:
-        st.write("Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
-    elif accuracy_svm < accuracy_cluster_svm:
-        st.write("Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
-    else:
-        st.write("Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
+
 
     st.subheader("Kurva ROC Perbandingan Metode")
     fig3, ax3 = plt.subplots()
@@ -249,6 +239,13 @@ elif page == "Pemilihan Model Terbaik":
     ax3.set_title('Kurva ROC')
     ax3.legend(loc="lower right")
     st.pyplot(fig3)
+    # Compare accuracy and display message based on comparison
+    if accuracy_svm > accuracy_cluster_svm:
+        st.write("n/Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+    elif accuracy_svm < accuracy_cluster_svm:
+        st.write("n/Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+    else:
+        st.write("n/Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
 
 # New Predictions Page
 if page == "Prediksi Data":
