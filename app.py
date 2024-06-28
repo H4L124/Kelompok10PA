@@ -240,18 +240,18 @@ combined_df = pd.concat([svm_df, cluster_svm_df], ignore_index=True)
 st.subheader("Perbandingan Evaluasi Model SVM dan K-Means SVM")
 st.dataframe(combined_df.style.format({"Akurasi": "{:.5f}", "Sensitivitas": "{:.5f}", "Spesifisitas": "{:.5f}"}))
     
-    st.subheader("Kurva ROC Perbandingan Metode")
-    fig, ax = plt.subplots()
-    ax.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'ROC curve SVM (area = {roc_auc_svm:.2f})')
-    ax.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label=f'ROC curve KMeans SVM (area = {roc_auc_ksvm:.2f})')
-    ax.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')  # Garis diagonal
-    ax.set_xlim([0.0, 1.0])
-    ax.set_ylim([0.0, 1.05])
-    ax.set_xlabel('False Positive Rate')
-    ax.set_ylabel('True Positive Rate')
-    ax.set_title('Receiver Operating Characteristic')
-    ax.legend(loc="lower right")
-    st.pyplot(fig)
+st.subheader("Kurva ROC Perbandingan Metode")
+fig, ax = plt.subplots()
+ax.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'ROC curve SVM (area = {roc_auc_svm:.2f})')
+ax.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label=f'ROC curve KMeans SVM (area = {roc_auc_ksvm:.2f})')
+ax.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')  # Garis diagonal
+ax.set_xlim([0.0, 1.0])
+ax.set_ylim([0.0, 1.05])
+ax.set_xlabel('False Positive Rate')
+ax.set_ylabel('True Positive Rate')
+ax.set_title('Receiver Operating Characteristic')
+ax.legend(loc="lower right")
+st.pyplot(fig)
     
     # Compare accuracy and display message based on comparison
     if accuracy_svm > accuracy_cluster_svm:
