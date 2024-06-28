@@ -113,10 +113,11 @@ if page == "Karakteristik Data":
     show_boxplot_days = st.checkbox("Boxplot Days Berdasarkan Kategori Fraud")
 
     # Pie chart for fraud variable
+    column_width = 0.75
     if show_pie_chart:
         st.subheader("Pie Chart Variabel Fraud")
         fraud_counts = data['fraud'].value_counts()
-        fig1, ax1 = plt.subplots(figsize=(0.75 * st.beta_columns(width), 0.75 * st.sidebar (height))
+        fig1, ax1 = plt.subplots(figsize=(column_width * st.beta_columns(width)))
         ax1.pie(fraud_counts, labels=['Sah', 'Penipuan'], autopct='%1.1f%%', startangle=140)
         st.pyplot(fig1)
         st.markdown("Deskripsi: Pie chart ini menunjukkan proporsi antara kategori 'Sah' dan 'Penipuan'.")
@@ -125,19 +126,19 @@ if page == "Karakteristik Data":
     if show_boxplot_amount or show_boxplot_second or show_boxplot_days:
         st.subheader("Boxplot Berdasarkan Kategori Fraud")
         if show_boxplot_amount:
-            fig_amount, ax_amount = plt.subplots(figsize=(0.75 * st.beta_columns(width), 0.75 * st.sidebar (height))
+            fig_amount, ax_amount = plt.subplots(figsize=(column_width * st.beta_columns(width)))
             sns.boxplot(x='fraud', y='amount', data=data, ax=ax_amount)
             ax_amount.set_title('Amount')
             st.pyplot(fig_amount)
             st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Amount' antara kategori 'Sah' dan 'Penipuan'.")
         if show_boxplot_second:
-            fig_second, ax_second = plt.subplots(figsize=(0.75 * st.beta_columns(width), 0.75 * st.sidebar (height))
+            fig_second, ax_second = plt.subplots(figsize=(column_width * st.beta_columns(width)))
             sns.boxplot(x='fraud', y='second', data=data, ax=ax_second)
             ax_second.set_title('Second')
             st.pyplot(fig_second)
             st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Second' antara kategori 'Sah' dan 'Penipuan'.")
         if show_boxplot_days:
-            fig_days, ax_days = plt.subplots(figsize=(0.75 * st.beta_columns(width), 0.75 * st.sidebar (height))
+            fig_days, ax_days = plt.subplots(figsize=(column_width * st.beta_columns(width)))
             sns.boxplot(x='fraud', y='days', data=data, ax=ax_days)
             ax_days.set_title('Days')
             st.pyplot(fig_days)
