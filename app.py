@@ -125,7 +125,7 @@ if page == "Karakteristik Data":
         fig1, ax1 = plt.subplots()
         ax1.pie(fraud_counts, labels=['Sah', 'Penipuan'], autopct='%1.1f%%', startangle=140)
         st.pyplot(fig1)
-        st.markdown("Deskripsi: Pie chart ini menunjukkan proporsi antara kategori 'Sah' dan 'Penipuan'.")
+        st.markdown("Karakteristik data persentase jumlah transaksi sah dan tidak sah sangat timpang atau tidak seimbang, dengan data transaksi dengan kategori penipuan lebih sedikit dibanding transaksi sah")
 
     # Boxplot for variables based on fraud category
     if show_boxplot_amount or show_boxplot_second or show_boxplot_days:
@@ -135,19 +135,19 @@ if page == "Karakteristik Data":
             sns.boxplot(x='fraud', y='amount', data=data, ax=ax_amount)
             ax_amount.set_title('Amount')
             st.pyplot(fig_amount)
-            st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Amount' antara kategori 'Sah' dan 'Penipuan'.")
+            st.markdown("Distribusi nilai transaksi kategori penipuan lebih beragam dibanding kategori sah")
         if show_boxplot_second:
             fig_second, ax_second = plt.subplots()
             sns.boxplot(x='fraud', y='second', data=data, ax=ax_second)
             ax_second.set_title('Second')
             st.pyplot(fig_second)
-            st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Second' antara kategori 'Sah' dan 'Penipuan'.")
+            st.markdown("Distribusi jeda detik transaksi kategori penipuan dan sah pada variabel jeda detik cenderung seragam")
         if show_boxplot_days:
             fig_days, ax_days = plt.subplots()
             sns.boxplot(x='fraud', y='days', data=data, ax=ax_days)
             ax_days.set_title('Days')
             st.pyplot(fig_days)
-            st.markdown("Boxplot ini membandingkan distribusi variabel 'Days' antara kategori 'Sah' dan 'Penipuan'.")
+            st.markdown("Distribusi jeda hari transaksi kategori penipuan dan sah pada variabel jeda detik cenderung seragam")
 
 
 # Predictions and evaluations for SVM
@@ -169,7 +169,6 @@ precision_svm = TN_svm / (TN_svm + FP_svm)
 y_pred_cluster_svm = kmeans.predict(X_test_ksvm)
 y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
-dat['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
 # Calculate accuracy, sensitivity, and specificity manually for KMeans SVM
 TP_cluster_svm = cm_cluster_svm[1, 1]
@@ -262,7 +261,7 @@ if page == "Prediksi Data":
     st.title("Prediksi Menggunakan Metode SVM")
     st.write("Masukkan nilai trasaksi, salah satu diantara jeda hari/jeda detik untuk memprediksi apakah transaksi kartu kredit yang terjadi terindikasi penipuan")
     # Input fields for amount, days, and seconds
-    amount = st.number_input("Nilai Transaksi (Dalam US Dollar)", min_value=0.0, max_value=30000.0)
+    amount = st.number_input("Nilai Transaksi (Dalam US Dollar)", min_value=0.0)
     days = st.number_input("Jeda Hari (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='days', on_change=update_days)
     second = st.number_input("Jeda Detik (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
 
