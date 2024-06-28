@@ -192,7 +192,9 @@ if page == "Single Classifier: SVM":
     st.title("Prediksi Menggunakan SVM")
     st.write(f"Hasil prediksi menggunakan metode SVM dengan kernel Linear dan Cost =1")
     st.subheader("Confusion Matrix")
-    st.table(cm_svm)
+    cm_svm_df = pd.DataFrame(cm_svm, index=['Sah', 'Penipuan'], columns=['Prediksi Sah', 'Prediksi Penipuan'])
+    # Menampilkan tabel confusion matrix dengan Streamlit
+    st.table(cm_svm_df)
     
     st.subheader("Evaluasi Model")
     st.write(f"Akurasi: {accuracy_svm:.5f}")
@@ -205,7 +207,6 @@ elif page == "Hybrid Classifier: KMeans SVM":
     st.title("Prediksi Menggunakan KMeans SVM")
     st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100")
     st.subheader("Confusion Matrix")
-    st.table(cm_cluster_svm)
     cm_df = pd.DataFrame(cm_cluster_svm, index=['Sah', 'Penipuan'], columns=['Prediksi Sah', 'Prediksi Penipuan'])
     # Menampilkan tabel confusion matrix dengan Streamlit
     st.table(cm_df)
