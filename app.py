@@ -94,9 +94,21 @@ data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
 # Data Page
 if page == "Data":
-    st.title("Data")
+    st.title("Data Transaksi Kartu Kredit")
     st.subheader("Tabel Data Transaksi Kartu Kredit")
-    st.dataframe(data)
+    
+    # Rename columns
+    data_renamed = data.rename(columns={
+        'amount': 'Nilai Transaksi',
+        'second': 'Jeda Detik',
+        'days': 'Jeda Hari',
+        'fraud': 'Jenis Transaksi'
+    })
+    
+    # Selection for number of rows to display
+    num_rows = st.slider('Pilih jumlah baris yang akan ditampilkan:', min_value=1, max_value=len(data_renamed), value=10)
+    
+    st.dataframe(data_renamed[['Nilai Transaksi', 'Jeda Detik', 'Jeda Hari', 'Jenis Transaksi']].head(num_rows))
     
 # Descriptive Statistics Page
 elif page == "Karakteristik Data":
