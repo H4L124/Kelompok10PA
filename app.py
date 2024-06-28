@@ -253,13 +253,13 @@ ax.set_title('Receiver Operating Characteristic')
 ax.legend(loc="lower right")
 st.pyplot(fig)
     
-    # Compare accuracy and display message based on comparison
-    if accuracy_svm > accuracy_cluster_svm:
-        st.write("Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
-    elif accuracy_svm < accuracy_cluster_svm:
-        st.write("Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
-    else:
-        st.write("Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
+# Compare accuracy and display message based on comparison
+if accuracy_svm > accuracy_cluster_svm:
+    st.write("Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+elif accuracy_svm < accuracy_cluster_svm:
+    st.write("Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+else:
+    st.write("Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
 
 # New Predictions Page
 if page == "Prediksi Data":
