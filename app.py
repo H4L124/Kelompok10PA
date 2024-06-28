@@ -76,18 +76,31 @@ if page == "Karakteristik Data":
 
  # Descriptive statistics for each variable
     def descriptive_stats(variable):
-        stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
-        # Mapping nama variabel
-        variable_names = {
+    # Set format angka desimal
+    pd.options.display.float_format = '{:.2f}'.format
+    
+    stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
+    
+    # Mapping nama variabel
+    variable_names = {
         'amount': 'Nilai Transaksi',
         'second': 'Jeda Detik',
-        'days': 'Jeda Hari'}
-        stats['variable'] = variable_names.get(variable, variable)
-        stats = stats.rename(columns={'mean': 'Rata-rata', 'std': 'Standar Deviasi', 
-                                      'min': 'Nilai Minimum', 'median': 'Median', 
-                                      'max': 'Nilai Maksimum'})
-        stats = stats.round(2)  # Round to 2 decimal places
-        return stats
+        'days': 'Jeda Hari'
+    }
+    stats['variable'] = variable_names.get(variable, variable)
+    
+    stats = stats.rename(columns={
+        'mean': 'Rata-rata',
+        'std': 'Standar Deviasi', 
+        'min': 'Nilai Minimum',
+        'median': 'Median',
+        'max': 'Nilai Maksimum'
+    })
+    
+    # Reset format angka desimal ke default setelah selesai
+    pd.options.display.float_format = None
+    
+    return stats
 
     amount_stats = descriptive_stats('amount')
     second_stats = descriptive_stats('second')
