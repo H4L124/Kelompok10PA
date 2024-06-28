@@ -282,8 +282,8 @@ if page == "Prediksi Data":
     st.write("Masukkan nilai transaksi, masukkan salah satu diantara jeda hari/jeda detik untuk memprediksi apakah transaksi kartu kredit yang terjadi terindikasi penipuan")
     # Input fields for amount, days, and seconds
     amount = st.number_input("Nilai Transaksi (Dalam US Dollar)", min_value=0.0)
-    days = st.number_input("Jeda Hari (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='days', on_change=update_days)
-    second = st.number_input("Jeda Detik (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
+    days = st.number_input("Jeda Hari (Isi salah satu antara Jeda Hari atau Jeda Detik)", min_value=0.0, step=1.0, key='days', on_change=update_days)
+    second = st.number_input("Jeda Detik (Isi salah satu antara Jeda Hari atau Jeda Detik)", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
     st.write("Tunggu beberapa saat hingga proses running selesai, kemudian klik prediksi")
     if st.button("Prediksi"):
         input_data = np.array([[amount, second, days]])
