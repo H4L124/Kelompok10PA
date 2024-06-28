@@ -63,7 +63,7 @@ y_test_ksvm = test_ksvm['fraud']
 
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Metode Terbaik", "Prediksi Data"], key='navigation')
+page = st.sidebar.radio("Pilih Halaman", ["Data", "Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Metode Terbaik", "Prediksi Data"], key='navigation')
 # Load data initially
 data = pd.read_excel('data.xlsx', sheet_name='data')
 def descriptive_stats(variable):
@@ -92,8 +92,14 @@ def descriptive_stats(variable):
 # Customizing fraud categories
 data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
+# Data Page
+if page == "Data":
+    st.title("Data")
+    st.subheader("Tabel Data Transaksi Kartu Kredit")
+    st.dataframe(data)
+    
 # Descriptive Statistics Page
-if page == "Karakteristik Data":
+elif page == "Karakteristik Data":
     st.title("Karakteristik Data Penipuan Kartu Kredit")
     
     st.subheader("Tabel Statistika Deskriptif")
