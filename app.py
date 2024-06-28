@@ -60,10 +60,6 @@ y_test_svm = test_data['fraud']
 
 X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster']]
 y_test_ksvm = test_ksvm['fraud']
-
-# Sidebar for navigation
-st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"], key='navigation')
 def descriptive_stats(variable):
     pd.options.display.float_format = '{:.2f}'.format  # Mengatur format angka menjadi 2 desimal di belakang koma
     stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
@@ -88,8 +84,19 @@ def descriptive_stats(variable):
     })
     
     return stats
+# Sidebar for navigation
+st.sidebar.title("Navigasi")
+page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"], key='navigation')
+# Load data initially
+data = pd.read_excel('data.xlsx', sheet_name='data')
 
-    # Calculate descriptive statistics for each variable
+
+# Descriptive Statistics Page
+if page == "Karakteristik Data":
+    st.title("Karakteristik Data Penipuan Kartu Kredit")
+    
+    st.subheader("Tabel Statistika Deskriptif")
+      # Calculate descriptive statistics for each variable
     amount_stats = descriptive_stats('amount')
     second_stats = descriptive_stats('second')
     days_stats = descriptive_stats('days')
@@ -99,12 +106,6 @@ def descriptive_stats(variable):
 
     # Customizing fraud categories
     data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
-
-# Descriptive Statistics Page
-if page == "Karakteristik Data":
-    st.title("Karakteristik Data Penipuan Kartu Kredit")
-    
-    st.subheader("Tabel Statistika Deskriptif")
     # Display the descriptive statistics
     st.table(desc_stats)
 
