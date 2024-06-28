@@ -131,9 +131,9 @@ elif page == "Karakteristik Data":
     # Visualization options
     st.subheader("Pilih Visualisasi")
     show_pie_chart = st.checkbox("Pie Chart Variabel Fraud")
-    show_boxplot_amount = st.checkbox("Boxplot Amount Berdasarkan Kategori Fraud")
-    show_boxplot_second = st.checkbox("Boxplot Second Berdasarkan Kategori Fraud")
-    show_boxplot_days = st.checkbox("Boxplot Days Berdasarkan Kategori Fraud")
+    show_boxplot_amount = st.checkbox("Boxplot Amount Berdasarkan Kategori Jenis Transaksi")
+    show_boxplot_second = st.checkbox("Boxplot Second Berdasarkan Kategori Jenis Transaksi")
+    show_boxplot_days = st.checkbox("Boxplot Days Berdasarkan Kategori Jenis Transaksi")
 
     # Pie chart for fraud variable
     if show_pie_chart:
