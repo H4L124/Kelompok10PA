@@ -63,13 +63,13 @@ y_test_ksvm = test_ksvm['fraud']
 
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
-st.subheader("Disusun Oleh:")
-st.write("Kelompok 10 Kelas B")
-st.subheader("Anggota Kelompok:")
-st.write("Rasendriya Arundati (2043211059)")
-st.write("Nur Haliza Rositasari (2043211069)")
-st.write("Moh. Fuadin Anugrah (2043211081)")
-st.write("Aurellia Putri Fathiqa (2043211095)")
+st.sidebar.subheader("Disusun Oleh:")
+st.sidebar.write("Kelompok 10 Kelas B")
+st.sidebar.subheader("Anggota Kelompok:")
+st.sidebar.write("Rasendriya Arundati (2043211059)")
+st.sidebar.write("Nur Haliza Rositasari (2043211069)")
+st.sidebar.write("Moh. Fuadin Anugrah (2043211081)")
+st.sidebar.write("Aurellia Putri Fathiqa (2043211095)")
 page = st.sidebar.radio("Pilih Halaman", ["Data", "Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Metode Terbaik", "Prediksi Data"], key='navigation')
 # Load data initially
 data = pd.read_excel('data.xlsx', sheet_name='data')
