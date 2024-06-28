@@ -73,7 +73,9 @@ if page == "Karakteristik Data":
     
   # Input field for descriptive table name
     table_name = st.title("Tabel Statistika Deskriptif")
+# Function to calculate descriptive statistics
 def descriptive_stats(variable):
+    pd.options.display.float_format = '{:.2f}'.format  # Format angka menjadi 2 desimal di belakang koma
     stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
     
     # Mapping nama variabel
@@ -92,29 +94,33 @@ def descriptive_stats(variable):
         'max': 'Nilai Maksimum'
     })
     
-    # Format kolom numerik menjadi 2 angka di belakang koma
-    stats_formatted = stats.style.format({
-        'Rata-rata': '{:.2f}',
-        'Standar Deviasi': '{:.2f}',
-        'Nilai Minimum': '{:.2f}',
-        'Median': '{:.2f}',
-        'Nilai Maksimum': '{:.2f}'
-    })
-    
-    return stats_formatted
+    return stats
 
+# Sidebar for navigation
+st.sidebar.title("Navigasi")
+page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"])
+
+# Load data initially
+data = pd.read_excel('data.xlsx', sheet_name='data')
+
+# Descriptive Statistics Page
+if page == "Karakteristik Data":
+    st.title("Karakteristik Data Penipuan Kartu Kredit")
+    
+    st.subheader("Tabel Statistika Deskriptif")
+    
+    # Calculate descriptive statistics for each variable
     amount_stats = descriptive_stats('amount')
     second_stats = descriptive_stats('second')
     days_stats = descriptive_stats('days')
 
-    # Customizing fraud categories
-    data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
-
     # Concatenate all stats into a single DataFrame
     desc_stats = pd.concat([amount_stats, second_stats, days_stats], ignore_index=True)
 
+    # Customizing fraud categories
+    data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
+
     # Display the descriptive statistics
-    st.subheader(table_name)
     st.table(desc_stats)
 
     st.markdown("Deskripsi: Tabel ini menampilkan statistik deskriptif untuk setiap variabel yang diamati.")
