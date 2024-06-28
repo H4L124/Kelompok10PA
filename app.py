@@ -71,10 +71,16 @@ page = st.sidebar.radio("Pilih halaman", ["Deskripsi Data", "Prediksi SVM", "Pre
 if page == "Deskripsi Data":
     st.title("Statistika Deskriptif")
     
+  # Input field for descriptive table name
+    table_name = st.text_input("Nama Tabel Deskriptif", "Tabel Statistika Deskriptif")
+
     # Descriptive statistics for each variable
     def descriptive_stats(variable):
         stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
         stats['variable'] = variable
+        stats = stats.rename(columns={'mean': 'Rata-rata', 'std': 'Standar Deviasi', 
+                                      'min': 'Nilai Minimum', 'median': 'Median', 
+                                      'max': 'Nilai Maksimum'})
         return stats
 
     amount_stats = descriptive_stats('amount')
@@ -85,27 +91,38 @@ if page == "Deskripsi Data":
     desc_stats = pd.concat([amount_stats, second_stats, days_stats], ignore_index=True)
 
     # Display the descriptive statistics
-    st.subheader("Tabel Statistika Deskriptif")
+    st.subheader(table_name)
     st.table(desc_stats)
 
-    # Pie chart for fraud variable
-    st.subheader("Pie Chart Variabel Fraud")
-    fraud_counts = data['fraud'].value_counts()
-    fig1, ax1 = plt.subplots(figsize=(3, 3))
-    ax1.pie(fraud_counts, labels=['Sah', 'Penipuan'], autopct='%1.1f%%', startangle=140)
-    st.pyplot(fig1)
-    
-    # Boxplot for variables based on fraud category
-    st.subheader("Boxplot Berdasarkan Kategori Fraud")
-    fig2, axes = plt.subplots(1, 3, figsize=(15, 5))
-    sns.boxplot(x='fraud', y='amount', data=data, ax=axes[0])
-    axes[0].set_title('Amount')
-    sns.boxplot(x='fraud', y='second', data=data, ax=axes[1])
-    axes[1].set_title('Second')
-    sns.boxplot(x='fraud', y='days', data=data, ax=axes[2])
-    axes[2].set_title('Days')
-    st.pyplot(fig2)
+    # Visualization options
+    st.subheader("Pilih Visualisasi")
+    show_pie_chart = st.checkbox("Pie Chart Variabel Fraud")
+    show_boxplot_amount = st.checkbox("Boxplot Amount Berdasarkan Kategori Fraud")
+    show_boxplot_second = st.checkbox("Boxplot Second Berdasarkan Kategori Fraud")
+    show_boxplot_days = st.checkbox("Boxplot Days Berdasarkan Kategori Fraud")
 
+    # Pie chart for fraud variable
+    if show_pie_chart:
+        st.subheader("Pie Chart Variabel Fraud")
+        fraud_counts = data['fraud'].value_counts()
+        fig1, ax1 = plt.subplots(figsize=(3, 3))
+        ax1.pie(fraud_counts, labels=['Sah', 'Penipuan'], autopct='%1.1f%%', startangle=140)
+        st.pyplot(fig1)
+
+    # Boxplot for variables based on fraud category
+    if show_boxplot_amount or show_boxplot_second or show_boxplot_days:
+        st.subheader("Boxplot Berdasarkan Kategori Fraud")
+        fig2, axes = plt.subplots(1, 3, figsize=(15, 5))
+        if show_boxplot_amount:
+            sns.boxplot(x='fraud', y='amount', data=data, ax=axes[0])
+            axes[0].set_title('Amount')
+        if show_boxplot_second:
+            sns.boxplot(x='fraud', y='second', data=data, ax=axes[1])
+            axes[1].set_title('Second')
+        if show_boxplot_days:
+            sns.boxplot(x='fraud', y='days', data=data, ax=axes[2])
+            axes[2].set_title('Days')
+        st.pyplot(fig2)
 # Predictions and evaluations for SVM
 y_pred_svm = svm_model.predict(X_test_svm)
 y_pred_svm_proba = svm_model.decision_function(X_test_svm)
