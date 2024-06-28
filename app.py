@@ -225,17 +225,17 @@ elif page == "Pemilihan Model Terbaik":
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
     
     st.subheader("Kurva ROC Perbandingan Metode")
-    plt.figure()
-    plt.plot(fpr_svm, tpr_svm, color='blue', lw=2, label='ROC curve Single Classifier (area = %0.2f)' % roc_auc_svm)
-    plt.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label='ROC curve Hybrid Classifier (area = %0.2f)' % roc_auc_ksvm)
-    plt.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')  # Garis diagonal
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic')
-    plt.legend(loc="lower right")
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'ROC curve Single Classifier (area = {roc_auc_svm:.2f})')
+    ax.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label=f'ROC curve Hybrid Classifier (area = {roc_auc_ksvm:.2f})')
+    ax.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')  # Garis diagonal
+    ax.set_xlim([0.0, 1.0])
+    ax.set_ylim([0.0, 1.05])
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
+    ax.set_title('Receiver Operating Characteristic')
+    ax.legend(loc="lower right")
+    st.pyplot(fig)
     
     # Compare accuracy and display message based on comparison
     if accuracy_svm > accuracy_cluster_svm:
