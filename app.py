@@ -68,24 +68,28 @@ st.sidebar.title("Navigasi")
 page = st.sidebar.radio("Pilih halaman", ["Deskripsi Data", "Prediksi SVM", "Prediksi KMeans SVM", "Perbandingan Model", "Prediksi Baru"])
 
 # Descriptive Statistics Page
-if page == "Deskripsi Data":
-    st.title("Statistika Deskriptif")
+if page == "Karakteristik Data":
+    st.title("Karakteristik Data Penipuan Kartu Kredit")
     
   # Input field for descriptive table name
-    table_name = st.text_input("Nama Tabel Deskriptif", "Tabel Statistika Deskriptif")
+    table_name = st.title("Tabel Statistika Deskriptif")
 
-    # Descriptive statistics for each variable
+ # Descriptive statistics for each variable
     def descriptive_stats(variable):
         stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
-        stats['variable'] = variable
+        stats['Variabel'] = variable.replace({'amount': 'Nilai Transaksi', 'second': 'Jeda Detik', 'days': 'Jeda Hari'})
         stats = stats.rename(columns={'mean': 'Rata-rata', 'std': 'Standar Deviasi', 
                                       'min': 'Nilai Minimum', 'median': 'Median', 
                                       'max': 'Nilai Maksimum'})
+        stats = stats.round(2)  # Round to 2 decimal places
         return stats
 
     amount_stats = descriptive_stats('amount')
     second_stats = descriptive_stats('second')
     days_stats = descriptive_stats('days')
+
+    # Customizing fraud categories
+    data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
     # Concatenate all stats into a single DataFrame
     desc_stats = pd.concat([amount_stats, second_stats, days_stats], ignore_index=True)
@@ -93,6 +97,8 @@ if page == "Deskripsi Data":
     # Display the descriptive statistics
     st.subheader(table_name)
     st.table(desc_stats)
+
+    st.markdown("Deskripsi: Tabel ini menampilkan statistik deskriptif untuk setiap variabel yang diamati.")
 
     # Visualization options
     st.subheader("Pilih Visualisasi")
@@ -108,21 +114,31 @@ if page == "Deskripsi Data":
         fig1, ax1 = plt.subplots(figsize=(3, 3))
         ax1.pie(fraud_counts, labels=['Sah', 'Penipuan'], autopct='%1.1f%%', startangle=140)
         st.pyplot(fig1)
+        st.markdown("Deskripsi: Pie chart ini menunjukkan proporsi antara kategori 'Sah' dan 'Penipuan'.")
 
     # Boxplot for variables based on fraud category
     if show_boxplot_amount or show_boxplot_second or show_boxplot_days:
         st.subheader("Boxplot Berdasarkan Kategori Fraud")
-        fig2, axes = plt.subplots(1, 3, figsize=(15, 5))
         if show_boxplot_amount:
-            sns.boxplot(x='fraud', y='amount', data=data, ax=axes[0])
-            axes[0].set_title('Amount')
+            fig_amount, ax_amount = plt.subplots()
+            sns.boxplot(x='fraud', y='amount', data=data, ax=ax_amount)
+            ax_amount.set_title('Amount')
+            st.pyplot(fig_amount)
+            st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Amount' antara kategori 'Sah' dan 'Penipuan'.")
         if show_boxplot_second:
-            sns.boxplot(x='fraud', y='second', data=data, ax=axes[1])
-            axes[1].set_title('Second')
+            fig_second, ax_second = plt.subplots()
+            sns.boxplot(x='fraud', y='second', data=data, ax=ax_second)
+            ax_second.set_title('Second')
+            st.pyplot(fig_second)
+            st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Second' antara kategori 'Sah' dan 'Penipuan'.")
         if show_boxplot_days:
-            sns.boxplot(x='fraud', y='days', data=data, ax=axes[2])
-            axes[2].set_title('Days')
-        st.pyplot(fig2)
+            fig_days, ax_days = plt.subplots()
+            sns.boxplot(x='fraud', y='days', data=data, ax=ax_days)
+            ax_days.set_title('Days')
+            st.pyplot(fig_days)
+            st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Days' antara kategori 'Sah' dan 'Penipuan'.")
+
+
 # Predictions and evaluations for SVM
 y_pred_svm = svm_model.predict(X_test_svm)
 y_pred_svm_proba = svm_model.decision_function(X_test_svm)
