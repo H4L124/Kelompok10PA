@@ -284,7 +284,7 @@ if page == "Prediksi Data":
     amount = st.number_input("Nilai Transaksi (Dalam US Dollar)", min_value=0.0)
     days = st.number_input("Jeda Hari (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='days', on_change=update_days)
     second = st.number_input("Jeda Detik (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
-
+    st.write("Tunggu beberapa saat hingga proses running selesai kemudian klik prediksi")
     if st.button("Prediksi"):
         input_data = np.array([[amount, second, days]])
         standardized_input = svm_scaler.transform(input_data)
