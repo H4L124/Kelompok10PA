@@ -60,8 +60,8 @@ y_test_svm = test_data['fraud']
 
 X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster']]
 y_test_ksvm = test_ksvm['fraud']
+
 def descriptive_stats(variable):
-    pd.options.display.float_format = '{:.2f}'.format  # Mengatur format angka menjadi 2 desimal di belakang koma
     stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
     
     # Mapping nama variabel
@@ -82,7 +82,7 @@ def descriptive_stats(variable):
         'median': 'Median',
         'max': 'Nilai Maksimum'
     })
-    
+    stats[['Rata-rata', 'Standar Deviasi', 'Nilai Minimum', 'Median', 'Nilai Maksimum']] = stats[['Rata-rata', 'Standar Deviasi', 'Nilai Minimum', 'Median', 'Nilai Maksimum']].applymap(lambda x: f"{x:.2f}")
     return stats
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
@@ -109,7 +109,7 @@ if page == "Karakteristik Data":
     # Display the descriptive statistics
     st.table(desc_stats)
 
-    st.markdown("Deskripsi: Tabel ini menampilkan statistik deskriptif untuk setiap variabel yang diamati.")
+    st.markdown("Tabel ini menampilkan statistik deskriptif untuk setiap variabel")
 
     # Visualization options
     st.subheader("Pilih Visualisasi")
