@@ -94,7 +94,7 @@ data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
 # Data Page
 if page == "Data":
-    st.title("Data Transaksi Kartu Kredit")
+    st.title("Dashboard Prediksi Penipuan Transaksi Kartu Kredit")
     st.subheader("Tabel Data Transaksi Kartu Kredit")
     
     # Rename columns
