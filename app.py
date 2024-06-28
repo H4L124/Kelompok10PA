@@ -61,16 +61,21 @@ y_test_svm = test_data['fraud']
 X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster']]
 y_test_ksvm = test_ksvm['fraud']
 
+# Sidebar for navigation
+st.sidebar.title("Navigasi")
+page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Metode Terbaik", "Prediksi Data"], key='navigation')
+# Load data initially
+data = pd.read_excel('data.xlsx', sheet_name='data')
 def descriptive_stats(variable):
     stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
     
     # Mapping nama variabel
     variable_names = {
         'fraud': 'Jenis Transaksi',
-        'variable': 'Variabel',
         'amount': 'Nilai Transaksi',
         'second': 'Jeda Detik',
-        'days': 'Jeda Hari'
+        'days': 'Jeda Hari',
+        'variable': 'Variabel'
     }
     stats['variable'] = variable_names.get(variable, variable)
     
@@ -84,12 +89,8 @@ def descriptive_stats(variable):
     })
     stats[['Rata-rata', 'Standar Deviasi', 'Nilai Minimum', 'Median', 'Nilai Maksimum']] = stats[['Rata-rata', 'Standar Deviasi', 'Nilai Minimum', 'Median', 'Nilai Maksimum']].applymap(lambda x: f"{x:.2f}")
     return stats
-# Sidebar for navigation
-st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Metode Terbaik", "Prediksi Data"], key='navigation')
-# Load data initially
-data = pd.read_excel('data.xlsx', sheet_name='data')
-
+# Customizing fraud categories
+data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
 # Descriptive Statistics Page
 if page == "Karakteristik Data":
@@ -104,8 +105,6 @@ if page == "Karakteristik Data":
     # Concatenate all stats into a single DataFrame
     desc_stats = pd.concat([amount_stats, second_stats, days_stats], ignore_index=True)
 
-    # Customizing fraud categories
-    data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
     # Display the descriptive statistics
     st.table(desc_stats)
 
