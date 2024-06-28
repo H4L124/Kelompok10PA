@@ -134,7 +134,7 @@ TN_cluster_svm = cm_cluster_svm[0, 0]
 
 accuracy_cluster_svm = (TP_cluster_svm + TN_cluster_svm) / (TP_cluster_svm + TN_cluster_svm + FP_cluster_svm + FN_cluster_svm)
 recall_cluster_svm = TP_cluster_svm / (TP_cluster_svm + FN_cluster_svm)
-precision_cluster_svm = TP_cluster_svm / (TP_cluster_svm + FP_cluster_svm)
+precision_cluster_svm = TN_cluster_svm / (TN_cluster_svm + FP_cluster_svm)
 
 # Calculate ROC curve and AUC
 fpr_svm, tpr_svm, _ = roc_curve(y_test_svm, y_pred_svm_proba)
