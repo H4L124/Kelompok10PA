@@ -65,13 +65,21 @@ y_test_ksvm = test_ksvm['fraud']
 st.sidebar.title("Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"], key='navigation')
 
-# Function to calculate descriptive statistics
+
+# Descriptive Statistics Page
+if page == "Karakteristik Data":
+    st.title("Karakteristik Data Penipuan Kartu Kredit")
+    
+    st.subheader("Tabel Statistika Deskriptif")
+    # Function to calculate descriptive statistics
 def descriptive_stats(variable):
-    pd.options.display.float_format = '{:.2f}'.format  # Format angka menjadi 2 desimal di belakang koma
+    pd.options.display.float_format = '{:.2f}'.format  # Mengatur format angka menjadi 2 desimal di belakang koma
     stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
     
     # Mapping nama variabel
     variable_names = {
+        'fraud': 'Jenis Transaksi',
+        'variable': 'Variabel',
         'amount': 'Nilai Transaksi',
         'second': 'Jeda Detik',
         'days': 'Jeda Hari'
@@ -79,6 +87,7 @@ def descriptive_stats(variable):
     stats['variable'] = variable_names.get(variable, variable)
     
     stats = stats.rename(columns={
+        'fraud': 'Jenis Transaksi',  # Rename kolom 'fraud' menjadi 'Jenis Transaksi'
         'mean': 'Rata-rata',
         'std': 'Standar Deviasi', 
         'min': 'Nilai Minimum',
@@ -88,12 +97,6 @@ def descriptive_stats(variable):
     
     return stats
 
-# Descriptive Statistics Page
-if page == "Karakteristik Data":
-    st.title("Karakteristik Data Penipuan Kartu Kredit")
-    
-    st.subheader("Tabel Statistika Deskriptif")
-    
     # Calculate descriptive statistics for each variable
     amount_stats = descriptive_stats('amount')
     second_stats = descriptive_stats('second')
@@ -180,10 +183,10 @@ recall_cluster_svm = TP_cluster_svm / (TP_cluster_svm + FN_cluster_svm)
 precision_cluster_svm = TN_cluster_svm / (TN_cluster_svm + FP_cluster_svm)
 
 # Calculate ROC curve and AUC
-fpr_svm, tpr_svm, _ = roc_curve(y_test_svm, y_pred_svm_proba)
+fpr_svm, tpr_svm, _ = roc_curve(y_test_svm, y_pred_svm)
 roc_auc_svm = auc(fpr_svm, tpr_svm)
 
-fpr_ksvm, tpr_ksvm, _ = roc_curve(y_test_ksvm, y_pred_cluster_svm_proba)
+fpr_ksvm, tpr_ksvm, _ = roc_curve(y_test_ksvm, y_pred_cluster_svm)
 roc_auc_ksvm = auc(fpr_ksvm, tpr_ksvm)
 
 # SVM Predictions Page
