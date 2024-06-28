@@ -39,7 +39,7 @@ st.set_page_config(page_title="Dashboard Klasifikasi SVM dan KMeans SVM")
 # Cache the data loading function to avoid reloading the data on each rerun
 @st.cache_resource
 def load_data(file_path):
-    data = pd.read_excel(file_path, sheet_name='data')
+    data = pd.read_excel(file_path, sheet_name='data', engine='openpyxl')
     train_data = pd.read_excel(file_path, sheet_name='oversample.train')
     test_data = pd.read_excel(file_path, sheet_name='test')
     train_ksvm = pd.read_excel(file_path, sheet_name='train_ksvm')
@@ -239,7 +239,7 @@ elif page == "Pemilihan Model Terbaik":
     
     # Compare accuracy and display message based on comparison
     if accuracy_svm > accuracy_cluster_svm:
-        st.write("n/Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+        st.write("Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
     elif accuracy_svm < accuracy_cluster_svm:
         st.write("Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
     else:
