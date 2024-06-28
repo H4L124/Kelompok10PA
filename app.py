@@ -37,7 +37,7 @@ def update_seconds():
 st.set_page_config(page_title="Dashboard Klasifikasi SVM dan KMeans SVM")
 
 # Cache the data loading function to avoid reloading the data on each rerun
-@st.cache
+@st.cache_resource
 def load_data(file_path):
     data = pd.read_excel(file_path, sheet_name='data')
     train_data = pd.read_excel(file_path, sheet_name='oversample.train')
@@ -225,25 +225,25 @@ elif page == "Pemilihan Model Terbaik":
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
     
     st.subheader("Kurva ROC Perbandingan Metode")
-    fig3, ax3 = plt.subplots()
-    ax3.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'SVM ROC curve (area = {roc_auc_svm:.2f})')
-    ax3.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label=f'KMeans SVM ROC curve (area = {roc_auc_ksvm:.2f})')
-    ax3.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')
-    ax3.set_xlim([0.0, 1.0])
-    ax3.set_ylim([0.0, 1.05])
-    ax3.set_xlabel('False Positive Rate')
-    ax3.set_ylabel('True Positive Rate')
-    ax3.set_title('Kurva ROC')
-    ax3.legend(loc="lower right")
-    st.pyplot(fig3)
+    plt.figure()
+    plt.plot(fpr_svm, tpr_svm, color='blue', lw=2, label='ROC curve Single Classifier (area = %0.2f)' % roc_auc_svm)
+    plt.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label='ROC curve Hybrid Classifier (area = %0.2f)' % roc_auc_ksvm)
+    plt.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')  # Garis diagonal
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic')
+    plt.legend(loc="lower right")
+    plt.show()
     
     # Compare accuracy and display message based on comparison
     if accuracy_svm > accuracy_cluster_svm:
         st.write("n/Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
     elif accuracy_svm < accuracy_cluster_svm:
-        st.write("n/Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+        st.write("Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
     else:
-        st.write("n/Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
+        st.write("Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
 
 # New Predictions Page
 if page == "Prediksi Data":
