@@ -229,8 +229,8 @@ elif page == "Pemilihan Model Terbaik":
     
     st.subheader("Kurva ROC Perbandingan Metode")
     fig, ax = plt.subplots()
-    ax.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'ROC curve Single Classifier (area = {roc_auc_svm:.2f})')
-    ax.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label=f'ROC curve Hybrid Classifier (area = {roc_auc_ksvm:.2f})')
+    ax.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'ROC curve SVM (area = {roc_auc_svm:.2f})')
+    ax.plot(fpr_ksvm, tpr_ksvm, color='red', lw=2, label=f'ROC curve KMeans SVM (area = {roc_auc_ksvm:.2f})')
     ax.plot([0, 1], [0, 1], color='grey', lw=2, linestyle='--')  # Garis diagonal
     ax.set_xlim([0.0, 1.0])
     ax.set_ylim([0.0, 1.05])
