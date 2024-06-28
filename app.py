@@ -64,14 +64,6 @@ y_test_ksvm = test_ksvm['fraud']
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"], key='navigation')
-
-
-# Descriptive Statistics Page
-if page == "Karakteristik Data":
-    st.title("Karakteristik Data Penipuan Kartu Kredit")
-    
-    st.subheader("Tabel Statistika Deskriptif")
-    # Function to calculate descriptive statistics
 def descriptive_stats(variable):
     pd.options.display.float_format = '{:.2f}'.format  # Mengatur format angka menjadi 2 desimal di belakang koma
     stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
@@ -108,6 +100,11 @@ def descriptive_stats(variable):
     # Customizing fraud categories
     data['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
+# Descriptive Statistics Page
+if page == "Karakteristik Data":
+    st.title("Karakteristik Data Penipuan Kartu Kredit")
+    
+    st.subheader("Tabel Statistika Deskriptif")
     # Display the descriptive statistics
     st.table(desc_stats)
 
@@ -149,7 +146,7 @@ def descriptive_stats(variable):
             sns.boxplot(x='fraud', y='days', data=data, ax=ax_days)
             ax_days.set_title('Days')
             st.pyplot(fig_days)
-            st.markdown("Deskripsi: Boxplot ini membandingkan distribusi variabel 'Days' antara kategori 'Sah' dan 'Penipuan'.")
+            st.markdown("Boxplot ini membandingkan distribusi variabel 'Days' antara kategori 'Sah' dan 'Penipuan'.")
 
 
 # Predictions and evaluations for SVM
@@ -192,7 +189,7 @@ roc_auc_ksvm = auc(fpr_ksvm, tpr_ksvm)
 # SVM Predictions Page
 if page == "Single Classifier: SVM":
     st.title("Prediksi Menggunakan SVM")
-    
+    st.write(f"Hasil prediksi menggunakan metode SVM dengan kernel Linear dan Cost =1")
     st.subheader("Confusion Matrix")
     st.table(cm_svm)
     
@@ -200,11 +197,12 @@ if page == "Single Classifier: SVM":
     st.write(f"Akurasi: {accuracy_svm:.5f}")
     st.write(f"Sensitivitas: {recall_svm:.5f}")
     st.write(f"Spesifisitas: {precision_svm:.5f}")
+    st.write(f"Hasil prediksi menggunakan metode SVM dengan kernel Linear dan Cost = 1, menghasilkan akurasi model yang memiliki performa yang sangat baik")
 
 # KMeans SVM Predictions Page
 elif page == "Hybrid Classifier: KMeans SVM":
     st.title("Prediksi Menggunakan KMeans SVM")
-    
+    st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100")
     st.subheader("Confusion Matrix")
     st.table(cm_cluster_svm)
     
@@ -212,20 +210,35 @@ elif page == "Hybrid Classifier: KMeans SVM":
     st.write(f"Akurasi: {accuracy_cluster_svm:.5f}")
     st.write(f"Sensitivitas: {recall_cluster_svm:.5f}")
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
+    st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100, menghasilkan akurasi model yang memiliki performa yang cukup baik tetapi masih memiliki ruang untuk perbaikan")
 
 # Model Comparison Page
 elif page == "Pemilihan Model Terbaik":
     st.title("Perbandingan Model SVM dan KMeans SVM")
-    st.subheader("Evaluasi Model Single Classifier: SVM")
-    st.write(f"Confusion Matrix SVM:\n{cm_svm}")
-    st.write(f"Akurasi: {accuracy_svm:.5f}")
-    st.write(f"Sensitivitas: {recall_svm:.5f}")
-    st.write(f"Spesifisitas: {precision_svm:.5f}")
-    
-    st.subheader("Evaluasi Model Hybrid Classifier: KMeans SVM")
-    st.write(f"Akurasi: {accuracy_cluster_svm:.5f}")
-    st.write(f"Sensitivitas: {recall_cluster_svm:.5f}")
-    st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
+# Membuat dataframe untuk SVM
+svm_metrics = {
+    "Model": ["SVM"],
+    "Akurasi": [accuracy_svm],
+    "Sensitivitas": [recall_svm],
+    "Spesifisitas": [precision_svm]
+}
+svm_df = pd.DataFrame(svm_metrics)
+
+# Membuat dataframe untuk K-Means SVM
+cluster_svm_metrics = {
+    "Model": ["K-Means SVM"],
+    "Akurasi": [accuracy_cluster_svm],
+    "Sensitivitas": [recall_cluster_svm],
+    "Spesifisitas": [precision_cluster_svm]
+}
+cluster_svm_df = pd.DataFrame(cluster_svm_metrics)
+
+# Menggabungkan kedua dataframe menjadi satu untuk dibandingkan
+combined_df = pd.concat([svm_df, cluster_svm_df], ignore_index=True)
+
+# Menampilkan tabel gabungan untuk membandingkan SVM dan K-Means SVM
+st.subheader("Perbandingan Evaluasi Model SVM dan K-Means SVM")
+st.dataframe(combined_df.style.format({"Akurasi": "{:.5f}", "Sensitivitas": "{:.5f}", "Spesifisitas": "{:.5f}"}))
     
     st.subheader("Kurva ROC Perbandingan Metode")
     fig, ax = plt.subplots()
