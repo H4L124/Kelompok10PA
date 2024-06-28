@@ -73,27 +73,35 @@ if page == "Karakteristik Data":
     
   # Input field for descriptive table name
     table_name = st.title("Tabel Statistika Deskriptif")
-
- # Descriptive statistics for each variable
-    def descriptive_stats(variable):
-        pd.options.display.float_format = '{:.2f}'.format
-        stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
-        # Mapping nama variabel
-        variable_names = {
+def descriptive_stats(variable):
+    stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
+    
+    # Mapping nama variabel
+    variable_names = {
         'amount': 'Nilai Transaksi',
         'second': 'Jeda Detik',
         'days': 'Jeda Hari'
-        }
-        stats['variable'] = variable_names.get(variable, variable)
+    }
+    stats['variable'] = variable_names.get(variable, variable)
     
-        stats = stats.rename(columns={
+    stats = stats.rename(columns={
         'mean': 'Rata-rata',
         'std': 'Standar Deviasi', 
         'min': 'Nilai Minimum',
         'median': 'Median',
         'max': 'Nilai Maksimum'
-        })
-        return stats
+    })
+    
+    # Format kolom numerik menjadi 2 angka di belakang koma
+    stats_formatted = stats.style.format({
+        'Rata-rata': '{:.2f}',
+        'Standar Deviasi': '{:.2f}',
+        'Nilai Minimum': '{:.2f}',
+        'Median': '{:.2f}',
+        'Nilai Maksimum': '{:.2f}'
+    })
+    
+    return stats_formatted
 
     amount_stats = descriptive_stats('amount')
     second_stats = descriptive_stats('second')
