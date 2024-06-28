@@ -86,7 +86,7 @@ def descriptive_stats(variable):
     return stats
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"], key='navigation')
+page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Metode Terbaik", "Prediksi Data"], key='navigation')
 # Load data initially
 data = pd.read_excel('data.xlsx', sheet_name='data')
 
@@ -206,6 +206,7 @@ elif page == "Hybrid Classifier: KMeans SVM":
     st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100")
     st.subheader("Confusion Matrix")
     st.table(cm_cluster_svm)
+    st.dataframe(cm_cluster_svm.style.format({"Sah", "Penipuan"}))
     
     st.subheader("Evaluasi Model")
     st.write(f"Akurasi: {accuracy_cluster_svm:.5f}")
@@ -214,7 +215,7 @@ elif page == "Hybrid Classifier: KMeans SVM":
     st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100, menghasilkan akurasi model yang memiliki performa yang cukup baik tetapi masih memiliki ruang untuk perbaikan")
 
 # Model Comparison Page
-elif page == "Pemilihan Model Terbaik":
+elif page == "Pemilihan Metode Terbaik":
     st.title("Perbandingan Model SVM dan KMeans SVM")
     # Membuat dataframe untuk SVM
     svm_metrics = {
@@ -257,12 +258,12 @@ elif page == "Pemilihan Model Terbaik":
         st.write("Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
 # New Predictions Page
 if page == "Prediksi Data":
-    st.title("Prediksi Menggunakan Model SVM")
-
+    st.title("Prediksi Menggunakan Metode SVM")
+    st.write("Masukkan nilai trasaksi, salah satu diantara jeda hari/jeda detik untuk memprediksi apakah transaksi kartu kredit yang terjadi terindikasi penipuan")
     # Input fields for amount, days, and seconds
-    amount = st.number_input("Amount", min_value=0.0, max_value=30000.0)
-    days = st.number_input("Days", min_value=0.0, step=1.0, key='days', on_change=update_days)
-    second = st.number_input("Second", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
+    amount = st.number_input("Nilai Transaksi (Dalam US Dollar)", min_value=0.0, max_value=30000.0)
+    days = st.number_input("Jeda Hari (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='days', on_change=update_days)
+    second = st.number_input("Jeda Detik (Isi salah satu antara Jeda Hari dan Jeda Detik)", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
 
     if st.button("Prediksi"):
         input_data = np.array([[amount, second, days]])
