@@ -60,7 +60,7 @@ X_test_svm = svm_scaler.transform(test_data[['amount', 'second', 'days']])
 y_test_svm = test_data['fraud']
 
 
-X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster]]
+X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster']]
 y_test_ksvm = test_data['fraud']
 
 # Sidebar for navigation
