@@ -65,7 +65,7 @@ y_test_ksvm = test_data['fraud']
 
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih halaman", ["Deskripsi Data", "Prediksi SVM", "Prediksi KMeans SVM", "Perbandingan Model", "Prediksi Baru"])
+page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"])
 
 # Descriptive Statistics Page
 if page == "Karakteristik Data":
@@ -177,7 +177,7 @@ fpr_ksvm, tpr_ksvm, _ = roc_curve(y_test_ksvm, y_pred_cluster_svm_proba)
 roc_auc_ksvm = auc(fpr_ksvm, tpr_ksvm)
 
 # SVM Predictions Page
-if page == "Prediksi SVM":
+if page == "Single Classifier: SVM":
     st.title("Prediksi Menggunakan SVM")
     
     st.subheader("Confusion Matrix")
@@ -189,7 +189,7 @@ if page == "Prediksi SVM":
     st.write(f"Spesifisitas: {precision_svm:.5f}")
 
 # KMeans SVM Predictions Page
-elif page == "Prediksi KMeans SVM":
+elif page == "Hybrid Classifier: KMeans SVM":
     st.title("Prediksi Menggunakan KMeans SVM")
     
     st.subheader("Confusion Matrix")
@@ -201,15 +201,15 @@ elif page == "Prediksi KMeans SVM":
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
 
 # Model Comparison Page
-elif page == "Perbandingan Model":
+elif page == "Pemilihan Model Terbaik":
     st.title("Perbandingan Model SVM dan KMeans SVM")
-    st.subheader("Evaluasi Model SVM")
+    st.subheader("Evaluasi Model Single Classifier: SVM")
     st.write(f"Confusion Matrix SVM:\n{cm_svm}")
     st.write(f"Akurasi: {accuracy_svm:.5f}")
     st.write(f"Sensitivitas: {recall_svm:.5f}")
     st.write(f"Spesifisitas: {precision_svm:.5f}")
     
-    st.subheader("Evaluasi Model KMeans SVM")
+    st.subheader("Evaluasi Model Hybrid Classifier: KMeans SVM")
     st.write(f"Akurasi: {accuracy_cluster_svm:.5f}")
     st.write(f"Sensitivitas: {recall_cluster_svm:.5f}")
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
@@ -236,7 +236,7 @@ elif page == "Perbandingan Model":
     st.pyplot(fig3)
 
 # New Predictions Page
-if page == "Prediksi Baru":
+if page == "Prediksi Data":
     st.title("Prediksi Menggunakan Model SVM")
 
     # Input fields for amount, days, and seconds
