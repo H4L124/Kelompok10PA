@@ -77,7 +77,13 @@ if page == "Karakteristik Data":
  # Descriptive statistics for each variable
     def descriptive_stats(variable):
         stats = data.groupby('fraud')[variable].agg(['mean', 'std', 'min', 'median', 'max']).reset_index()
-        stats['Variabel'] = variable.replace({'amount': 'Nilai Transaksi', 'second': 'Jeda Detik', 'days': 'Jeda Hari'})
+        # Mapping nama variabel
+    variable_names = {
+        'amount': 'Nilai Transaksi',
+        'second': 'Jeda Detik',
+        'days': 'Jeda Hari'
+    }
+        stats['Variabel'] = variable_names.get(variable, variable)
         stats = stats.rename(columns={'mean': 'Rata-rata', 'std': 'Standar Deviasi', 
                                       'min': 'Nilai Minimum', 'median': 'Median', 
                                       'max': 'Nilai Maksimum'})
