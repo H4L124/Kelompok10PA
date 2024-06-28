@@ -206,7 +206,9 @@ elif page == "Hybrid Classifier: KMeans SVM":
     st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100")
     st.subheader("Confusion Matrix")
     st.table(cm_cluster_svm)
-    st.DataFrame(cm_cluster_svm, index=['Sah', 'Penipuan'], columns=['Prediksi Sah', 'Prediksi Penipuan'])
+    cm_df = pd.DataFrame(cm_cluster_svm, index=['Sah', 'Penipuan'], columns=['Prediksi Sah', 'Prediksi Penipuan'])
+    # Menampilkan tabel confusion matrix dengan Streamlit
+    st.table(cm_df)
     
     st.subheader("Evaluasi Model")
     st.write(f"Akurasi: {accuracy_cluster_svm:.5f}")
