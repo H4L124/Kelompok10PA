@@ -169,6 +169,7 @@ precision_svm = TN_svm / (TN_svm + FP_svm)
 y_pred_cluster_svm = kmeans.predict(X_test_ksvm)
 y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
+dat['fraud'] = data['fraud'].replace({0: 'Sah', 1: 'Penipuan'})
 
 # Calculate accuracy, sensitivity, and specificity manually for KMeans SVM
 TP_cluster_svm = cm_cluster_svm[1, 1]
@@ -206,7 +207,7 @@ elif page == "Hybrid Classifier: KMeans SVM":
     st.write(f"Hasil prediksi menggunakan metode K-Means SVM dengan kernel Linear dan Cost =100")
     st.subheader("Confusion Matrix")
     st.table(cm_cluster_svm)
-    st.dataframe(cm_cluster_svm.style.format({"Sah", "Penipuan"}))
+    st.DataFrame(cm_cluster_svm, index=['Sah', 'Penipuan'], columns=['Prediksi Sah', 'Prediksi Penipuan'])
     
     st.subheader("Evaluasi Model")
     st.write(f"Akurasi: {accuracy_cluster_svm:.5f}")
