@@ -77,7 +77,7 @@ def descriptive_stats(variable):
         'days': 'Jeda Hari',
         'variable': 'Variabel'
     }
-    stats['variable'] = variable_names.get(variable, variable)
+    stats['Variabel'] = variable_names.get(variable, variable)
     
     stats = stats.rename(columns={
         'fraud': 'Jenis Transaksi',  # Rename kolom 'fraud' menjadi 'Jenis Transaksi'
