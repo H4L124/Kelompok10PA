@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler
 
 # Initialize dummy scaler and model
 svm_scaler = StandardScaler()
-svm_model = SVC(probability=True)  # Ensure probability=True to get decision function
+svm_model = SVC(probability=True)  # Ensure probability=True to get probability estimates
 
 # Example scaled data for initialization
 svm_scaler.fit([[0, 0, 0], [30000, 86400*365, 365]])
@@ -37,13 +37,13 @@ def update_seconds():
 st.set_page_config(page_title="Dashboard Klasifikasi SVM dan KMeans SVM")
 
 # Cache the data loading function to avoid reloading the data on each rerun
-@st.cache_resource
+@st.cache
 def load_data(file_path):
     data = pd.read_excel(file_path, sheet_name='data')
     train_data = pd.read_excel(file_path, sheet_name='oversample.train')
     test_data = pd.read_excel(file_path, sheet_name='test')
-    train_ksvm =  pd.read_excel(file_path, sheet_name='train_ksvm')
-    test_ksvm =  pd.read_excel(file_path, sheet_name='test_ksvm')
+    train_ksvm = pd.read_excel(file_path, sheet_name='train_ksvm')
+    test_ksvm = pd.read_excel(file_path, sheet_name='test_ksvm')
     return data, train_data, test_data, train_ksvm, test_ksvm
 
 # Load data initially
@@ -52,27 +52,19 @@ data, train_data, test_data, train_ksvm, test_ksvm = load_data('data.xlsx')
 # Load the pre-trained models
 svm_scaler = load('svm_scaler.joblib')
 svm_model = load('svm_model.joblib')
-
 kmeans = load('ksvm_model.joblib')
 
 # Standardize the test data
 X_test_svm = svm_scaler.transform(test_data[['amount', 'second', 'days']])
 y_test_svm = test_data['fraud']
 
-
 X_test_ksvm = test_ksvm[['amount', 'second', 'days', 'cluster']]
-y_test_ksvm = test_data['fraud']
+y_test_ksvm = test_ksvm['fraud']
 
 # Sidebar for navigation
 st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"])
+page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"], key='navigation')
 
-# Descriptive Statistics Page
-if page == "Karakteristik Data":
-    st.title("Karakteristik Data Penipuan Kartu Kredit")
-    
-  # Input field for descriptive table name
-    table_name = st.title("Tabel Statistika Deskriptif")
 # Function to calculate descriptive statistics
 def descriptive_stats(variable):
     pd.options.display.float_format = '{:.2f}'.format  # Format angka menjadi 2 desimal di belakang koma
@@ -95,13 +87,6 @@ def descriptive_stats(variable):
     })
     
     return stats
-
-# Sidebar for navigation
-st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["Karakteristik Data", "Single Classifier: SVM", "Hybrid Classifier: KMeans SVM", "Pemilihan Model Terbaik", "Prediksi Data"])
-
-# Load data initially
-data = pd.read_excel('data.xlsx', sheet_name='data')
 
 # Descriptive Statistics Page
 if page == "Karakteristik Data":
@@ -166,7 +151,7 @@ if page == "Karakteristik Data":
 
 # Predictions and evaluations for SVM
 y_pred_svm = svm_model.predict(X_test_svm)
-y_pred_svm_proba = svm_model.decision_function(X_test_svm)
+y_pred_svm_proba = svm_model.predict_proba(X_test_svm)[:, 1]
 cm_svm = confusion_matrix(y_test_svm, y_pred_svm)
 
 # Calculate accuracy, sensitivity, and specificity manually for SVM
@@ -175,13 +160,13 @@ FN_svm = cm_svm[1, 0]
 FP_svm = cm_svm[0, 1]
 TN_svm = cm_svm[0, 0]
 
-accuracy_svm = (TP_svm + TN_svm) / (TP_svm + TN_svm + FP_svm + FN_svm)
-recall_svm = TP_svm / (TP_svm + FN_svm)
-precision_svm = TP_svm / (TP_svm + FP_svm)
+accuracy_svm = accuracy_score(y_test_svm, y_pred_svm)
+recall_svm = recall_score(y_test_svm, y_pred_svm)
+precision_svm = precision_score(y_test_svm, y_pred_svm)
 
 # Predictions and evaluations for KMeans SVM
 y_pred_cluster_svm = kmeans.predict(X_test_ksvm)
-y_pred_cluster_svm_proba = kmeans.decision_function(X_test_ksvm)
+y_pred_cluster_svm_proba = kmeans.predict_proba(X_test_ksvm)[:, 1]
 cm_cluster_svm = confusion_matrix(y_test_ksvm, y_pred_cluster_svm)
 
 # Calculate accuracy, sensitivity, and specificity manually for KMeans SVM
@@ -190,9 +175,9 @@ FN_cluster_svm = cm_cluster_svm[1, 0]
 FP_cluster_svm = cm_cluster_svm[0, 1]
 TN_cluster_svm = cm_cluster_svm[0, 0]
 
-accuracy_cluster_svm = (TP_cluster_svm + TN_cluster_svm) / (TP_cluster_svm + TN_cluster_svm + FP_cluster_svm + FN_cluster_svm)
-recall_cluster_svm = TP_cluster_svm / (TP_cluster_svm + FN_cluster_svm)
-precision_cluster_svm = TN_cluster_svm / (TN_cluster_svm + FP_cluster_svm)
+accuracy_cluster_svm = accuracy_score(y_test_ksvm, y_pred_cluster_svm)
+recall_cluster_svm = recall_score(y_test_ksvm, y_pred_cluster_svm)
+precision_cluster_svm = precision_score(y_test_ksvm, y_pred_cluster_svm)
 
 # Calculate ROC curve and AUC
 fpr_svm, tpr_svm, _ = roc_curve(y_test_svm, y_pred_svm_proba)
@@ -239,8 +224,6 @@ elif page == "Pemilihan Model Terbaik":
     st.write(f"Sensitivitas: {recall_cluster_svm:.5f}")
     st.write(f"Spesifisitas: {precision_cluster_svm:.5f}")
     
-
-
     st.subheader("Kurva ROC Perbandingan Metode")
     fig3, ax3 = plt.subplots()
     ax3.plot(fpr_svm, tpr_svm, color='blue', lw=2, label=f'SVM ROC curve (area = {roc_auc_svm:.2f})')
@@ -255,11 +238,11 @@ elif page == "Pemilihan Model Terbaik":
     st.pyplot(fig3)
     # Compare accuracy and display message based on comparison
     if accuracy_svm > accuracy_cluster_svm:
-        st.write("n/Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+        st.write("Metode SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
     elif accuracy_svm < accuracy_cluster_svm:
-        st.write("n/Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
+        st.write("Metode KMeans SVM lebih baik dalam memprediksi penipuan transaksi kartu kredit.")
     else:
-        st.write("n/Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
+        st.write("Metode SVM dan KMeans SVM memiliki performa prediksi yang sama untuk penipuan transaksi kartu kredit.")
 
 # New Predictions Page
 if page == "Prediksi Data":
@@ -267,11 +250,7 @@ if page == "Prediksi Data":
 
     # Input fields for amount, days, and seconds
     amount = st.number_input("Amount", min_value=0.0, max_value=30000.0)
-    
-    # Input field for days
     days = st.number_input("Days", min_value=0.0, step=1.0, key='days', on_change=update_days)
-
-    # Input field for seconds
     second = st.number_input("Second", min_value=0.0, step=1.0, key='second', on_change=update_seconds)
 
     if st.button("Prediksi"):
